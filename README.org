@@ -1,0 +1,123 @@
+* Table of Contents                                                     :TOC:
+- [[#interop-with-c-in-clojure][Interop with C in Clojure]]
+- [[#problem][problem]]
+- [[#java--c-binding][Java & C Binding]]
+  - [[#jni][JNI]]
+  - [[#jna][JNA]]
+  - [[#jnr][JNR]]
+  - [[#javacpp][JavaCPP]]
+  - [[#panama][Panama]]
+  - [[#performance-check][performance check]]
+- [[#jni-example][JNI Example]]
+- [[#jna-example][JNA Example]]
+- [[#jnr-example][JNR Example]]
+- [[#javacpp-example][JavaCPP Example]]
+- [[#panama-example][Panama Example]]
+- [[#jna-example-sdl2][JNA Example (SDL2)]]
+- [[#sdl][SDL]]
+- [[#sdl-language-bindings][SDL Language Bindings]]
+- [[#java][Java?]]
+- [[#demo-clojure-binding-for-sdl2][Demo clojure binding for SDL2]]
+- [[#java-interop-types][java interop types]]
+
+* Interop with C in Clojure
+  - [[https://www.slideshare.net/netpyoung/interop-with-c-in-clojure][slideshare]]
+
+* problem
+  - How to load library.
+  - writing wrapper function.
+  - C structure layout for pointer access.
+
+* Java & C Binding
+  | name    |    date |
+  |---------+---------|
+  | JNI     | 1997.02 |
+  | JNA     | 2007.05 |
+  | JNR     | 2013.02 |
+  | JavaCPP | 2015.07 |
+  | panama  |     EAB |
+
+** JNI
+   - https://docs.oracle.com/javase/8/docs/technotes/guides/jni/
+   - from JDK 1.1
+** JNA
+   - https://github.com/java-native-access/jna
+** JNR
+   - https://github.com/jnr/jnr-ffi
+     - jnr-ffi is a Java library for loading native libraries without writing JNI code by hand, or using tools such as SWIG.
+   - https://www.slideshare.net/skrb/jnr-java-native-runtime
+   - https://www.oracle.com/technetwork/java/jvmls2013nutter-2013526.pdf
+** TODO JavaCPP
+** TODO Panama
+   - https://openjdk.java.net/projects/panama/
+   - [[https://www.youtube.com/watch?v=cfxBrYud9KM][Panama: A Foreign Policy for Java by Maurizio Cimadamore]]
+   - [[https://www.youtube.com/watch?v=49GUljUmGHg][Going Meta to Valhalla & Panama with John Rose]]
+** performance check
+   https://github.com/yulewei/java-ffi-demo
+   JNI > JNR > JNA (Direct Mapping) > JNA (Interface Mapping)
+
+* JNI Example
+  1. prepare native c library
+  2. =writing= && compile interop java file
+  3. generate interop c header
+  4. =writing= && c`mpile interop c library
+  5. =writing= && build clojure project with interop java file
+  6. call ~clojure library~ with ~native c library~ and ~interop c library~
+
+* JNA Example
+  1. prepare native c library
+  2. =writing= && build clojure project
+
+* JNR Example
+  1. prepare native c library
+  2. =writing= && build clojure project
+* TODO JavaCPP Example
+* TODO Panama Example
+  I don't prepare this(experimental feature)
+  No native methods like in JNI. Panama uses interfaces with annotations
+e
+  https://hg.openjdk.java.net/panama/dev/raw-file/4810a7de75cb/doc/panama_foreign.html#jextract-a-jar-file-for-sqlite3.h
+
+* JNA Example (SDL2)
+  SDL2(C language) binding in clojure
+
+* SDL
+  - Simple DirectMedia Layer
+  - cross-platform development library.
+  - designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware
+  - via OpenGL and Direct3D
+
+* SDL Language Bindings
+  https://www.libsdl.org/languages.php
+
+  Ada
+  C#
+  D
+  Go
+  Lua
+  OCaml
+  Pascal
+  Python
+  Rust
+
+* Java?
+ - java: https://github.com/javasdl/libjavasdl
+   JNA
+
+* Demo clojure binding for SDL2
+
+* java interop types
+- https://www.slideshare.net/SeanLo4/jnainfo-52738038
+| Native Type        |     Size | Java Type  | Common Windows Type   |
+|--------------------+----------+------------+-----------------------|
+| char               |        8 | byte       | BYTE, TCHAR           |
+| short              |       16 | short      | short WORD            |
+| wchar_t            |    16/32 | char       | WCHAR, TCHAR          |
+| int                |       32 | int        | DWORD                 |
+| int                |          | boolean    | BOOL                  |
+| long               |    32/64 | NativeLong | LONG                  |
+| long long, __int64 |       64 | long       |                       |
+| float              |       32 | float      |                       |
+| double             |       64 | double     |                       |
+| char*              | C String | String     | LPCTSTR               |
+| void*              |  pointer | Pointer    | LPVOID, HANDLE, LPXXX |

@@ -1,0 +1,35 @@
+Rake::TaskManager.record_task_metadata = true
+
+task :default do
+  sh "rake -T"
+end
+
+desc "1. prepare c libarary"
+task :prepare_c_library do |task|
+  puts task.full_comment
+  Dir.chdir("c-hello") do
+    sh "cmake ."
+    sh "cmake --build ."
+  end
+end
+
+desc "2. build clojure project"
+task :build_clojure_project do |task|
+  puts task.full_comment
+  Dir.chdir("clj-hello") do
+    if Gem.win_platform?
+      cp "../c-hello/Debug/hello.dll", "."
+      sh "boot build"
+      sh "java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
+    else
+      cp "../c-hello/libhello.so", "."
+      sh "boot build"
+      sh "LD_LIBRARY_PATH=`pwd` java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
+    end
+  end
+end
+
+desc "do all"
+task :all => [:prepare_c_library, :build_clojure_project] do |task|
+  puts task.full_comment
+end
