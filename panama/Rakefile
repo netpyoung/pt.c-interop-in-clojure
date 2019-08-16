@@ -1,0 +1,45 @@
+Rake::TaskManager.record_task_metadata = true
+require 'os'
+
+# gem install os
+
+task :default do
+  sh "rake -T"
+end
+
+desc "1. prepare c libarary"
+task :prepare_c_library do |task|
+  puts task.full_comment
+  Dir.chdir("c-hello") do
+    sh "cmake ."
+    sh "cmake --build ."
+  end
+end
+
+desc "2. build wrapper jar using jextract"
+task :build_wrapper_jar do |task|
+  puts task.full_comment
+  Dir.chdir("clj-hello") do
+    if OS.mac?
+      cp "../c-hello/libhello.dylib", "."
+      sh 'jextract -t wrapper.hello -L . -l hello --record-library-path ../c-hello/include/hello.h -o wrapper-hello-macOs-64.jar'
+    end
+  end
+end
+
+desc "3. build clojure project"
+task :build_clojure_project do |task|
+  puts task.full_comment
+  sh 'boot -d seancorfield/boot-localrepo install-artifact -f clj-hello/wrapper-hello-macOs-64.jar -P wrapper/hello -v 0.0.1'
+  Dir.chdir("clj-hello") do
+    if OS.mac?
+      sh "boot build"
+      sh "LD_LIBRARY_PATH=`pwd` java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
+    end
+  end
+end
+
+desc "do all"
+task :all => [:prepare_c_library, :build_wrapper_jar, :build_clojure_project] do |task|
+  puts task.full_comment
+end
