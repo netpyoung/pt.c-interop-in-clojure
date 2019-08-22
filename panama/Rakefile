@@ -23,6 +23,9 @@ task :build_wrapper_jar do |task|
     if OS.mac?
       cp "../c-hello/libhello.dylib", "."
       sh 'jextract -t wrapper.hello -L . -l hello --record-library-path ../c-hello/include/hello.h -o wrapper-hello-macOs-64.jar'
+    elsif OS.windows?
+      cp "../c-hello/Debug/hello.dll", "."
+      sh 'jextract -t wrapper.hello -L . -l hello --record-library-path ../c-hello/include/hello.h -o wrapper-hello-win-64.jar'
     end
   end
 end
@@ -30,11 +33,23 @@ end
 desc "3. build clojure project"
 task :build_clojure_project do |task|
   puts task.full_comment
-  sh 'boot -d seancorfield/boot-localrepo install-artifact -f clj-hello/wrapper-hello-macOs-64.jar -P wrapper/hello -v 0.0.1'
-  Dir.chdir("clj-hello") do
-    if OS.mac?
+  if OS.mac?
+    sh 'boot -d seancorfield/boot-localrepo install-artifact -f clj-hello/wrapper-hello-macOs-64.jar -P wrapper/hello -v 0.0.1'
+    Dir.chdir("clj-hello") do
       sh "boot build"
       sh "LD_LIBRARY_PATH=`pwd` java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
+    end
+  elsif OS.windows?
+    # sh 'boot -d seancorfield/boot-localrepo install-artifact -f clj-hello/wrapper-hello-win-64.jar -P wrapper/hello -v 0.0.1'
+    Dir.chdir("clj-hello") do
+      # cmd
+      # ENV['BOOT_JAVA_COMMAND'] = `which java`
+      # sh "boot build"
+      # sh "java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
+
+      # powershell
+      # sh '$env:PATH += ";$(Get-Location)"'
+      # sh 'clj -m clj-hello.core'
     end
   end
 end
