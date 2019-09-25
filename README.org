@@ -50,6 +50,7 @@
 ** TODO JavaCPP
 ** TODO Panama
    - https://openjdk.java.net/projects/panama/
+   - https://download.java.net/java/early_access/panama/docs/api/java.base/java/foreign/package-summary.html
    - [[https://www.youtube.com/watch?v=cfxBrYud9KM][Panama: A Foreign Policy for Java by Maurizio Cimadamore]]
    - [[https://www.youtube.com/watch?v=49GUljUmGHg][Going Meta to Valhalla & Panama with John Rose]]
 ** performance check

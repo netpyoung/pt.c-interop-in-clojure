@@ -1,2 +1,6 @@
-{:deps {org.clojure/clojure {:mvn/version "1.10.0"}
-        wrapper/hello       {:mvn/version "0.0.1"}}}
+{:deps    {org.clojure/clojure {:mvn/version "1.10.0"}
+           wrapper/hello       {:mvn/version "0.0.1"}}
+ :aliases {:cider
+           {:extra-deps  {cider/cider-nrepl    {:mvn/version "0.21.1"}}
+            :extra-paths ["test"]
+            :main-opts   ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "--interactive"]}}}

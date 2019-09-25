@@ -29,4 +29,35 @@
 #endif
 #endif
 
+typedef enum
+  {
+   NONE,
+   A,
+   B
+  } TestEnum;
+
+typedef union TestUnion
+{
+  TestEnum type;
+  int padding[2];
+} TestUnion;
+
+typedef struct AStruct
+{
+  TestEnum type;
+  int a1;
+} AStruct;
+
+typedef struct BStruct
+{
+  TestEnum type;
+  int b1;
+  int b2;
+} BStruct;
+
+int SIZE = 12;
+
 EXPORTED int hello(int, int);
+EXPORTED TestUnion* test_malloc(int);
+EXPORTED void test_free(TestUnion*);
+EXPORTED void inc_chararr(char*);

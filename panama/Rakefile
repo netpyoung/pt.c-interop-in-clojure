@@ -40,16 +40,16 @@ task :build_clojure_project do |task|
       sh "LD_LIBRARY_PATH=`pwd` java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
     end
   elsif OS.windows?
-    # sh 'boot -d seancorfield/boot-localrepo install-artifact -f clj-hello/wrapper-hello-win-64.jar -P wrapper/hello -v 0.0.1'
+    sh 'boot -d seancorfield/boot-localrepo install-artifact -f clj-hello/wrapper-hello-win-64.jar -P wrapper/hello -v 0.0.1'
     Dir.chdir("clj-hello") do
       # cmd
-      # ENV['BOOT_JAVA_COMMAND'] = `which java`
+      ENV['BOOT_JAVA_COMMAND'] = `which java`
       # sh "boot build"
       # sh "java -jar target/clj-hello-0.1.0-SNAPSHOT-standalone.jar"
 
       # powershell
       # sh '$env:PATH += ";$(Get-Location)"'
-      # sh 'clj -m clj-hello.core'
+      sh 'PowerShell clj -m clj-hello.core'
     end
   end
 end
