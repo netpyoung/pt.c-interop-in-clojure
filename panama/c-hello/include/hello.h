@@ -60,4 +60,4 @@ int SIZE = 12;
 EXPORTED int hello(int, int);
 EXPORTED TestUnion* test_malloc(int);
 EXPORTED void test_free(TestUnion*);
-EXPORTED void inc_chararr(char*);
+EXPORTED char* inc_chararr(char*);
