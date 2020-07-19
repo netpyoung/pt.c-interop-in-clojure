@@ -28,10 +28,12 @@
 ;; ===============================
 ;; Demo. Scope
 ;; ===============================
+
 (def scope (.fork (hello_lib/scope)))
 (def cstring (.allocateCString scope "helloworld"))
-(def x (Pointer/toString cstring))
 (.close scope)
+
+
 (def y (Pointer/toString cstring))
 ;;-> Scope is not alive
 
@@ -85,17 +87,18 @@
 
 
 (def a (hello_lib/test_malloc 1))
-(def instance-a (.allocate scope layouttype-a))
-(def buffer-a (.asDirectByteBuffer a 12))
-(def buffer-instance-a (.asDirectByteBuffer instance-a 12))
+(def instance-a (.allocate scope (.pointer layouttype-a)))
+;; (def buffer-a (.asDirectByteBuffer a 12))
+;; (def buffer-instance-a (.asDirectByteBuffer instance-a 12))
 (.put buffer-instance-a buffer-a)
-;;=> #object[java.nio.DirectByteBuffer 0x4189b11a "java.nio.DirectByteBuffer[pos=12 lim=12 cap=12]"]
+
+
+(.type$set (.get a) 300)
 (.type$get (.get a))
-;;=> 1
-(.type$get (.get instance-a))
-;;=> 1
-(.a1$get (.get instance-a))
-;;=> 11
+
+(.type$get (.get (.get ap)))
+
+
 
 
 (def b (hello_lib/test_malloc 2))
@@ -115,9 +118,11 @@
 ;;=> 99
 
 
-(def lt-p (.pointer layouttype-b))
-(def bp (.allocate scope lt-p))
-(.set bp b)
+(def lt-p (.pointer layouttype-a))
+(def ap (.allocate scope lt-p))
+(.set ap a)
+
+
 (.b1$get (.get (.get bp)))
 
 
